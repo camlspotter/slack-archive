@@ -96,9 +96,10 @@ interface DownloadMessagesResult {
 
 export async function downloadMessages(
   channel: Channel,
-  i: number,
-  channelCount: number
+  i: number, // id of the channel 0 .. channelCount - 1
+  channelCount: number // number of channels found
 ): Promise<DownloadMessagesResult> {
+
   let result: DownloadMessagesResult = {
     messages: [],
     new: 0,
@@ -142,6 +143,12 @@ export async function downloadMessages(
   }
 
   spinner.succeed(`Downloaded ${i + 1}/${channelCount} ${name}...`);
+
+  // hack
+  if ( result.new == 0 && oldest != 0 ){
+     console.log(`Hack for too old channel`, channel.name);
+     result.new = 1;
+  }
 
   return result;
 }
